@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { getCurrentUser } from "@/lib/appwrite/api";
 import { IcontextType, IUser } from "@/types";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -62,6 +63,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       navigate("/signin");
 
     checkAuthUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value = {
