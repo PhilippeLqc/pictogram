@@ -14,7 +14,7 @@ export const useCreateUserAccount = () => {
     }) 
 };
 
-export const useSingninAccount = () => {
+export const useSigninAccount = () => {
     return useMutation({
         mutationFn: (user: {
             email: string; 
