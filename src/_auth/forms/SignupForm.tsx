@@ -17,7 +17,7 @@ import Loader from "@/components/shared/Loader";
 import { useToast } from "@/components/ui/use-toast";
 import {
   useCreateUserAccount,
-  useSingninAccount,
+  useSigninAccount,
 } from "@/lib/react-query/queryAndMutations";
 import { useUserContext } from "@/context/AuthContext";
 
@@ -29,7 +29,7 @@ const SignupForm = () => {
   const { mutateAsync: createUserAccount, isPending: isCreatingAccount } =
     useCreateUserAccount();
   const { mutateAsync: signinAccount, isPending: isSigninIn } =
-    useSingninAccount();
+    useSigninAccount();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignupValidation>>({
