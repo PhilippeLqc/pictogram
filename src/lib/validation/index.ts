@@ -12,4 +12,10 @@ export const SigninValidation = z.object({
   password: z.string().min(8, { message: "Password must be at least 8 characters." }),
 });
 
+export const PostValidation = z.object({
+  caption: z.string().min(5, { message: "Caption must be at least 5 characters." }).max(2200),
+  tags: z.string(),
+  location: z.string().min(2, { message: "Location must be at least 2 characters." }).max(100),
+  file: z.custom<File[]>(),
+});
   

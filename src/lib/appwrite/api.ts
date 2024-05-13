@@ -1,6 +1,6 @@
-import { INewUser } from "@/types";
+import { INewPost, INewUser } from "@/types";
 import { ID, Query } from 'appwrite';
-import { account, appwriteConfig, avatars, database } from "./config";
+import { account, appwriteConfig, avatars, database, storage } from "./config";
 
 export async function createUserAccount(user: INewUser){
     try {
@@ -90,6 +90,51 @@ export async function signOutAccount() {
     try {
         const session = await account.deleteSession('current');
         return session;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function createPost(post: INewPost) {
+    try {
+        const uploadedFile = await uploadFile(post.file[0]);
+        if (!uploadedFile) throw Error;
+
+        const fileUrl = getFilePreview(uploadedFile.$id);
+
+        if (!fileUrl) {throw Error};
+
+
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+export async function uploadFile(file: File) {
+    try {
+        const uploadedFile = await storage.createFile(
+            appwriteConfig.storageId,
+            ID.unique(),
+            file
+        );
+        return uploadedFile;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export function getFilePreview(fileId: string) {
+    try {
+        const fileUrl = storage.getFilePreview(
+            appwriteConfig.storageId,
+            fileId,
+            2000,
+            2000,
+            "top",
+            100,
+        );
+        return fileUrl;
     } catch (error) {
         console.error(error);
     }
