@@ -68,6 +68,8 @@ export async function getCurrentUser() {
     try {
         const currentAccount = await account.get();
 
+        console.log({currentAccount});
+
         if (!currentAccount) throw Error;
 
         const currentUser = await database.listDocuments(
