@@ -4,7 +4,7 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from '@tanstack/react-query';
-import { createPost, createUserAccount, getRecentPosts, signinAccount, signOutAccount } from '../appwrite/api';
+import { createPost, createUserAccount, deleteSavePost, getCurrentUser, getRecentPosts, likePost, savePost, signinAccount, signOutAccount } from '../appwrite/api';
 import { INewPost, INewUser } from '@/types';
 import { QUERY_KEYS } from './queryKeys';
 
@@ -49,3 +49,70 @@ export const useGetRecentPosts = () => {
         queryFn: getRecentPosts,
     })
 }
+
+export const useLikePost = () => {
+    const QueryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ postId, likesArray}: {postId: string, likesArray: string[]}) => likePost(postId, likesArray),
+        onSuccess: (data) => {
+            QueryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id]
+            })
+            QueryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
+            })
+            QueryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_POSTS]
+            })
+            QueryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_CURRENT_USER]
+            })
+        }
+    })
+}
+
+export const useSavePost = () => {
+    const QueryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ post, user}: {post: string, user: string}) => savePost(post, user),
+        onSuccess: () => {
+            QueryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
+            })
+            QueryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_POSTS]
+            })
+            QueryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_CURRENT_USER]
+            })
+        }
+    })
+}
+
+export const useDeleteSavedPost = () => {
+    const QueryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (savedRecordId: string) => deleteSavePost(savedRecordId),
+        onSuccess: () => {
+            QueryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
+            })
+            QueryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_POSTS]
+            })
+            QueryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_CURRENT_USER]
+            })
+        }
+    })
+}
+
+export const useGetCurrentUser = () => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+        queryFn: getCurrentUser,
+    })
+};

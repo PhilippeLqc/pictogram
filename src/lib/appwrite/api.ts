@@ -191,3 +191,58 @@ export async function getRecentPosts() {
         console.error(error);
     }
 }
+
+export async function likePost(postId: string, likesArray: string[]) {
+    try {
+        const updatedPost = await database.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.postCollectionId,
+            postId,
+            {
+                likes: likesArray,
+            }
+        )
+
+        if (!updatedPost) throw Error;
+
+        return updatedPost;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function savePost(post: string, user: string) {
+    try {
+        const updatedPost = await database.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            ID.unique(),
+            {
+                post: post,
+                user: user,
+            }
+        )
+
+        if (!updatedPost) throw Error;
+
+        return updatedPost;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function deleteSavePost(savedRecordId: string) {
+    try {
+        const statusCode = await database.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            savedRecordId,
+        )
+
+        if (!statusCode) throw Error;
+
+        return { status: 'success'};
+    } catch (error) {
+        console.error(error);
+    }
+}
