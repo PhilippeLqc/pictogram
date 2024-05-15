@@ -226,10 +226,10 @@
     @apply rounded-lg base-medium hover:bg-primary-500 transition;
   }
 
-    /* Right sidebar */
-    .rightsidebar {
-      @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[540px] bg-dark-2;
-    }
+  /* Right sidebar */
+  .rightsidebar {
+    @apply hidden xl:flex px-6 py-10 flex-col justify-between min-w-[540px] bg-dark-2;
+  }
 
   /* Post Card */
   .post-card {
