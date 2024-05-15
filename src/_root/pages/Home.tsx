@@ -15,7 +15,13 @@ const Home = () => {
       <div className="home-container">
         <div className="home-posts">
           <h2 className="h3-bold md:h2-bold text-left w-full">Home Feed</h2>
-          {isPostLoading && !posts ? (
+          {isErrorPosts ? (
+            <div className="flex flex-col items-center justify-center h-96">
+              <p className="body-bold text-center">
+                Something went wrong. Please try again later.
+              </p>
+            </div>
+          ) : isPostLoading && !posts ? (
             <Loader />
           ) : (
             <ul className="flex flex-col flex-1 gap-9 w-full">
