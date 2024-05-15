@@ -10,6 +10,7 @@ import {
 import { useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
+//comment to be able to push
 const Explore = () => {
   const { ref, inView } = useInView();
   const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
