@@ -384,3 +384,38 @@ export async function getUsers(limit?: number) {
         console.error(error);
     }
 }
+
+// export async function getPostsByUser(userId: string) {
+//     try {
+//         const posts = await database.listDocuments(
+//             appwriteConfig.databaseId,
+//             appwriteConfig.postCollectionId,
+//             [Query.orderDesc('$createdAt'), Query.contains('follow', userId)]
+//         )
+
+//         if (!posts) throw Error;
+        
+//         return posts;
+//     } catch (error) {
+//         console.error(error);
+//     }
+// }
+
+// export async function followUser(userId: string, followersArray: string[]) {
+//     try {
+//         const updatedUser = await database.updateDocument(
+//             appwriteConfig.databaseId,
+//             appwriteConfig.userCollectionId,
+//             userId,
+//             {
+//                 follow: followersArray,
+//             }
+//         )
+
+//         if (!updatedUser) throw Error;
+
+//         return updatedUser;
+//     } catch (error) {
+//         console.error(error);
+//     }
+// }
