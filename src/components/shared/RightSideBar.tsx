@@ -25,7 +25,7 @@ const RightSideBar = () => {
         ) : isUserLoading && !creator ? (
           <Loader />
         ) : (
-          <ul className="flex flex-col gap-9 w-full">
+          <ul className="user-grid">
             {creator?.documents.map((creator: Models.Document) => (
               <UserCard creator={creator} key={creator.$id} />
             ))}
