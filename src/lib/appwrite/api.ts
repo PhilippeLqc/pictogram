@@ -1,5 +1,5 @@
 import { INewPost, INewUser, IUpdatePost } from "@/types";
-import { ID, ImageGravity, Query } from 'appwrite';
+import { ID, ImageGravity, Models, Query } from 'appwrite';
 import { account, appwriteConfig, avatars, database, storage } from "./config";
 
 export async function createUserAccount(user: INewUser){
@@ -373,7 +373,6 @@ export async function getUsers(limit?: number) {
         const users = await database.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.userCollectionId,
-            // if limit is provided, add it to the query, else return all users
             [limit ? `${Query.orderDesc('$createdAt'), Query.limit(limit)}` : Query.orderDesc('$createdAt')]
         )
 
@@ -385,37 +384,88 @@ export async function getUsers(limit?: number) {
     }
 }
 
-// export async function getPostsByUser(userId: string) {
-//     try {
-//         const posts = await database.listDocuments(
-//             appwriteConfig.databaseId,
-//             appwriteConfig.postCollectionId,
-//             [Query.orderDesc('$createdAt'), Query.contains('follow', userId)]
-//         )
+export async function followUser(userId: string, followersArray: string[]) {
+    try {
+        const updatedUser = await database.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.followCollectionId,
+            ID.unique(),
+            {
+                followerId: userId,
+                followedId: followersArray,
+            }
+        )
 
-//         if (!posts) throw Error;
+        if (!updatedUser) throw Error;
+
+        return updatedUser;
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+export async function unfollowUser(followId: string) {
+    try {
+        const statusCode = await database.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.followCollectionId,
+            followId,
+        )
+
+        if (!statusCode) throw Error;
+
+        return { status: 'success'};
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function getFollowers(userId: string) {
+    try {
+        const followers = await database.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.followCollectionId,
+            [Query.contains('followerId', userId)]
+        )
+
+        if (!followers) throw Error;
         
-//         return posts;
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
+        return followers;
+    } catch (error) {
+        console.error(error);
+    }
+}
 
-// export async function followUser(userId: string, followersArray: string[]) {
-//     try {
-//         const updatedUser = await database.updateDocument(
-//             appwriteConfig.databaseId,
-//             appwriteConfig.userCollectionId,
-//             userId,
-//             {
-//                 follow: followersArray,
-//             }
-//         )
+export async function getFollowed(userId: string) {
+    try {
+        const followed = await database.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.followCollectionId,
+            [Query.equal('followedId', userId)]
+        )
 
-//         if (!updatedUser) throw Error;
+        if (!followed) throw Error;
+        
+        return followed;
+    } catch (error) {
+        console.error(error);
+    }
+}
 
-//         return updatedUser;
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
+export async function getPostsByUser(userId: string) {
+    const following = await getFollowed(userId);
+    try {
+        const posts = await database.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.postCollectionId,
+            [Query.contains('creator', following!.documents.map((follow: Models.Document) => follow.$id))]
+        )
+
+        if (!posts) throw Error;
+        
+        return posts;
+    } catch (error) {
+        console.error(error);
+    }
+}
