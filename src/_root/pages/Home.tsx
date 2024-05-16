@@ -1,5 +1,6 @@
 import Loader from "@/components/shared/Loader";
 import PostCard from "@/components/shared/PostCard";
+import RightSideBar from "@/components/shared/RightSideBar";
 import { useGetRecentPosts } from "@/lib/react-query/queryAndMutations";
 import { Models } from "appwrite";
 
@@ -32,6 +33,7 @@ const Home = () => {
           )}
         </div>
       </div>
+      <RightSideBar />
     </div>
   );
 };

@@ -6,7 +6,7 @@ type userCardsProps = {
 };
 const UserCard = ({ creator }: userCardsProps) => {
   return (
-    <div className="user-container">
+    <div>
       <div className="user-card">
         <img
           src={creator?.imageUrl || "assets/icons/default-avatar.svg"}

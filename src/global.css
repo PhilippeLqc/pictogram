@@ -114,11 +114,11 @@
 
   /* All Users */
   .user-container {
-    @apply max-w-5xl flex flex-col items-start w-full gap-6 md:gap-9;
+    @apply max-w-5xl flex flex-col items-center w-full gap-6 md:gap-9;
   }
 
   .user-grid {
-    @apply w-full grid grid-cols-2 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-7 max-w-5xl;
+    @apply w-full grid grid-cols-2 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl;
   }
 
   /* Explore */
@@ -247,7 +247,7 @@
 
   /* User card */
   .user-card {
-    @apply flex-center flex-col gap-4 border border-dark-4 rounded-[20px] px-5 py-8 w-full;
+    @apply flex-center flex-col gap-4 border border-dark-4 rounded-[20px] px-5 py-8 xl:py-10 w-full;
   }
 }
 

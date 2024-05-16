@@ -374,7 +374,7 @@ export async function getUsers(limit?: number) {
             appwriteConfig.databaseId,
             appwriteConfig.userCollectionId,
             // if limit is provided, add it to the query, else return all users
-            [Query.orderDesc('$createdAt'), limit ? Query.limit(limit): '']
+            [limit ? `${Query.orderDesc('$createdAt'), Query.limit(limit)}` : Query.orderDesc('$createdAt')]
         )
 
         if (!users) throw Error;

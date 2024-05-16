@@ -1,6 +1,5 @@
 import Bottombar from "@/components/shared/Bottombar";
 import Leftsidebar from "@/components/shared/LeftSidebar";
-import RightSideBar from "@/components/shared/RightSideBar";
 import Topbar from "@/components/shared/Topbar";
 import { Outlet } from "react-router-dom";
 
@@ -13,7 +12,6 @@ const RootLayout = () => {
         <Outlet />
       </section>
       <Bottombar />
-      <RightSideBar />
     </div>
   );
 };
