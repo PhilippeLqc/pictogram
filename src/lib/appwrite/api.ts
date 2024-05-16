@@ -384,15 +384,15 @@ export async function getUsers(limit?: number) {
     }
 }
 
-export async function followUser(userId: string, followersArray: string[]) {
+export async function followUser(userId: string, followersArray: string) {
     try {
         const updatedUser = await database.createDocument(
             appwriteConfig.databaseId,
             appwriteConfig.followCollectionId,
             ID.unique(),
             {
-                followerId: userId,
-                followedId: followersArray,
+                followerId: [userId],
+                followedId: [followersArray],
             }
         )
 
@@ -419,6 +419,23 @@ export async function unfollowUser(followId: string) {
     } catch (error) {
         console.error(error);
     }
+}
+
+export async function isFollowing(userId: string, followerId: string) {
+    try {
+        const follow = await database.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.followCollectionId,
+            [Query.contains('followerId', userId), Query.equal('followedId', followerId)]
+        )
+
+        if (!follow) throw Error;
+        
+        return follow;
+    } catch (error) {
+        console.error(error);
+    }
+
 }
 
 export async function getFollowers(userId: string) {
