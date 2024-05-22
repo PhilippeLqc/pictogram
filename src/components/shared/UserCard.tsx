@@ -1,6 +1,9 @@
 import { Models } from "appwrite";
 import { Button } from "../ui/button";
-import { useFollowUser } from "@/lib/react-query/queryAndMutations";
+import {
+  useFollowUser,
+  useGetFollowers,
+} from "@/lib/react-query/queryAndMutations";
 import { useUserContext } from "@/context/AuthContext";
 import Loader from "@/components/shared/Loader";
 
@@ -10,11 +13,13 @@ type userCardsProps = {
 const UserCard = ({ creator }: userCardsProps) => {
   const { user } = useUserContext();
   const { mutateAsync: followUser, isPending: isFollowing } = useFollowUser();
+  const { data: followers } = useGetFollowers(creator.$id);
 
-  const hanfleFollow = async () => {
+  const handleFollow = async () => {
     if (!user) return;
     try {
-      await followUser({ userId: creator.$id, followerId: creator.$id });
+      await followUser({ userId: creator.$id, followerId: user.id });
+      console.log("followed", creator.$id);
     } catch (error) {
       console.log(error);
     }
@@ -30,11 +35,13 @@ const UserCard = ({ creator }: userCardsProps) => {
         />
         <div className="flex flex-col text-center">
           <p className="small-semibold">{creator.username}</p>
-          {/* <p className="small-regular text-light-3">Followed by john doe</p> */}
+          <p className="small-regular text-light-3">
+            Followed by {followers?.length} persons
+          </p>
         </div>
         <Button
           className="shad-button_primary"
-          onClick={hanfleFollow}
+          onClick={handleFollow}
           disabled={isFollowing}
         >
           {isFollowing ? <Loader /> : "Follow"}

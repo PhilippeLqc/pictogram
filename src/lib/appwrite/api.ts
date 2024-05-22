@@ -1,5 +1,5 @@
-import { INewPost, INewUser, IUpdatePost } from "@/types";
-import { ID, ImageGravity, Models, Query } from 'appwrite';
+import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
+import { ID, ImageGravity, Query } from 'appwrite';
 import { account, appwriteConfig, avatars, database, storage } from "./config";
 
 export async function createUserAccount(user: INewUser){
@@ -384,15 +384,15 @@ export async function getUsers(limit?: number) {
     }
 }
 
-export async function followUser(userId: string, followersArray: string) {
+export async function followUser(userId: string, followerId: string) {
     try {
         const updatedUser = await database.createDocument(
             appwriteConfig.databaseId,
             appwriteConfig.followCollectionId,
             ID.unique(),
             {
-                followerId: [userId],
-                followedId: [followersArray],
+                follower: followerId,
+                user: userId,
             }
         )
 
@@ -421,68 +421,67 @@ export async function unfollowUser(followId: string) {
     }
 }
 
-export async function isFollowing(userId: string, followerId: string) {
-    try {
-        const follow = await database.listDocuments(
-            appwriteConfig.databaseId,
-            appwriteConfig.followCollectionId,
-            [Query.contains('followerId', userId), Query.equal('followedId', followerId)]
-        )
-
-        if (!follow) throw Error;
-        
-        return follow;
-    } catch (error) {
-        console.error(error);
-    }
-
-}
-
 export async function getFollowers(userId: string) {
     try {
         const followers = await database.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.followCollectionId,
-            [Query.contains('followerId', userId)]
-        )
+            [Query.equal('user', userId)]
+        );
 
-        if (!followers) throw Error;
-        
-        return followers;
+        if (!followers || followers.documents.length === 0) return [];
+
+        return followers.documents.map(doc => doc.followerId);
     } catch (error) {
-        console.error(error);
+        console.error("Error fetching followers:", error);
+        return [];
     }
 }
 
-export async function getFollowed(userId: string) {
+export async function updateProfile(user: IUpdateUser) {
+    const hasFileToUpdate = user.file.length > 0;
     try {
-        const followed = await database.listDocuments(
+        let image = {
+            imageUrl: user.imageUrl,
+            imageId: user.imageId,
+        }
+
+        if (hasFileToUpdate) {
+            // Upload file to storage
+            const uploadedFile = await uploadFile(user.file[0]);
+            if (!uploadedFile) throw Error;
+            // Get file url
+            const fileUrl = getFilePreview(uploadedFile.$id);
+    
+            if (!fileUrl) {
+                deleteFile(uploadedFile.$id);
+                throw Error
+            }
+
+            image = {...image, imageUrl: fileUrl, imageId: uploadedFile.$id};
+        }
+
+        // save profile to db
+        const updatedUser = await database.updateDocument(
             appwriteConfig.databaseId,
-            appwriteConfig.followCollectionId,
-            [Query.equal('followedId', userId)]
+            appwriteConfig.userCollectionId,
+            user.userId,
+            {
+                name: user.name,
+                username: user.username,
+                bio: user.bio,
+                imageUrl: image.imageUrl,
+                imageId: image.imageId,
+            }
         )
 
-        if (!followed) throw Error;
-        
-        return followed;
+        if (!updatedUser) {
+            await deleteFile(user.imageId);
+            throw Error;
+        }
+        return updatedUser;
     } catch (error) {
         console.error(error);
     }
-}
 
-export async function getPostsByUser(userId: string) {
-    const following = await getFollowed(userId);
-    try {
-        const posts = await database.listDocuments(
-            appwriteConfig.databaseId,
-            appwriteConfig.postCollectionId,
-            [Query.contains('creator', following!.documents.map((follow: Models.Document) => follow.$id))]
-        )
-
-        if (!posts) throw Error;
-        
-        return posts;
-    } catch (error) {
-        console.error(error);
-    }
 }

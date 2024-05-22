@@ -18,4 +18,11 @@ export const PostValidation = z.object({
   location: z.string().min(2, { message: "Location must be at least 2 characters." }).max(100),
   file: z.custom<File[]>(),
 });
-  
+
+export const UpdateProfileValidation = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }).max(50),
+  username: z.string().min(2, { message: "Username must be at least 2 characters."}).max(50),
+  email: z.string().email(),
+  bio: z.string().max(1000),
+  file: z.custom<File[]>(),
+});
