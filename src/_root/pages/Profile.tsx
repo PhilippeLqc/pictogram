@@ -28,16 +28,8 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
   const { id } = useParams();
   const { data: currentUser } = useGetUserById(id || "");
-  const {
-    data: currentUserFollowers,
-    isLoading: currentUserFollowersLoading,
-    error: currentUserFollowersError,
-  } = useGetFollowers(id || "");
-  const {
-    data: currentUserFollowing,
-    isLoading: currentUserFollowingLoading,
-    error: currentUserFollowingError,
-  } = useGetFollowing(id || "");
+  const { data: currentUserFollowers } = useGetFollowers(id || "");
+  const { data: currentUserFollowing } = useGetFollowing(id || "");
   const { user } = useUserContext();
 
   if (!currentUser)
@@ -71,11 +63,15 @@ const Profile = () => {
             <div className="flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20">
               <StatBlock value={currentUser.posts.length} label="Posts" />
               <StatBlock
-                value={currentUserFollowers?.length || 0}
-                label="Followers"
+                value={currentUserFollowers?.length ?? 0}
+                label={
+                  currentUserFollowers && currentUserFollowers.length <= 1
+                    ? "Follower"
+                    : "Followers"
+                }
               />
               <StatBlock
-                value={currentUserFollowing?.length || 0}
+                value={currentUserFollowing?.length ?? 0}
                 label="Following"
               />
             </div>
@@ -112,7 +108,11 @@ const Profile = () => {
         </div>
       </div>
       {user.id === currentUser.$id ? (
-        <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
+        <Tabs
+          defaultValue={activeTab}
+          onValueChange={setActiveTab}
+          className=" max-w-5xl w-full"
+        >
           <TabsList className="flex max-w-5xl w-full justify-start">
             <TabsTrigger
               value="posts"
@@ -151,8 +151,8 @@ const Profile = () => {
           </TabsContent>
         </Tabs>
       ) : (
-        <div className="flex max-w-5xl w-full justify-start">
-          <div className="profile-tab rounded-l-lg">
+        <div className="flex flex-col gap-10">
+          <div className="profile-tab rounded-lg !bg-dark-3">
             <img
               src={"/assets/icons/posts.svg"}
               alt="posts"
