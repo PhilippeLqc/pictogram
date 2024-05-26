@@ -84,6 +84,22 @@ export async function getCurrentUser() {
     }
 }
 
+export async function getUserById(userId: string) {
+    try {
+        const user = await database.getDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.userCollectionId,
+            userId,
+        )
+
+        if (!user) throw Error;
+
+        return user;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export async function signOutAccount() {
     try {
         const session = await account.deleteSession('current');
@@ -435,6 +451,22 @@ export async function getFollowers(userId: string) {
     } catch (error) {
         console.error("Error fetching followers:", error);
         return [];
+    }
+}
+
+export async function getFollowing(userId: string) {
+    try {
+        const following = await database.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.followCollectionId,
+            [Query.equal('follower', userId)]
+        )
+
+        if (!following || following.documents.length === 0) return [];
+
+        return following.documents.map(doc => doc.userId);
+    } catch (error) {
+        console.error(error);
     }
 }
 

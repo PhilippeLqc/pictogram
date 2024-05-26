@@ -16,7 +16,9 @@ const GridPostList = ({
 }: GridPostListProps) => {
   const { user } = useUserContext();
 
-  return (
+  return posts.length === 0 ? (
+    <p className="h2-bold text-center">No posts yet</p>
+  ) : (
     <ul className="grid-container">
       {posts.map((post) => (
         <li key={post.$id} className="relative min-w-80 h-80">

@@ -4,7 +4,7 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from '@tanstack/react-query';
-import { createPost, createUserAccount, deletePost, deleteSavePost, followUser, getCurrentUser, getFollowers, getInfinitePosts, getPostsById, getRecentPosts, getUsers, likePost, savePost, searchPosts, signinAccount, signOutAccount, updatePost, updateProfile } from '../appwrite/api';
+import { createPost, createUserAccount, deletePost, deleteSavePost, followUser, getCurrentUser, getFollowers, getFollowing, getInfinitePosts, getPostsById, getRecentPosts, getUserById, getUsers, likePost, savePost, searchPosts, signinAccount, signOutAccount, updatePost, updateProfile } from '../appwrite/api';
 import { INewPost, INewUser, IUpdatePost, IUpdateUser } from '@/types';
 import { QUERY_KEYS } from './queryKeys';
 
@@ -117,6 +117,14 @@ export const useGetCurrentUser = () => {
     })
 };
 
+export const useGetUserById = (userId: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
+        queryFn: () => getUserById(userId),
+        enabled: !!userId
+    })
+}
+
 export const useGetPostsById = (postId: string) => {
     return useQuery({
         queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
@@ -202,6 +210,13 @@ export const useGetFollowers = (userId: string) => {
     return useQuery({
         queryKey: [QUERY_KEYS.GET_FOLLOWERS, userId],
         queryFn: () => getFollowers(userId),
+    })
+}
+
+export const useGetFollowing = (userId: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_FOLLOWING, userId],
+        queryFn: () => getFollowing(userId),
     })
 }
 
