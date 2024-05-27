@@ -57,3 +57,10 @@ export type INavLink = {
     username: string;
     password: string;
   };
+
+  export type IComment = {
+    post_id: string;
+    user_id: string;
+    content: string;
+  };
+
