@@ -9,6 +9,7 @@ export const appwriteConfig = {
     postCollectionId: import.meta.env.VITE_APPWRITE_POSTS_COLLECTION_ID,
     savesCollectionId: import.meta.env.VITE_APPWRITE_SAVES_COLLECTION_ID,
     followCollectionId: import.meta.env.VITE_APPWRITE_FOLLOWS_COLLECTION_ID,
+    commentsCollectionId: import.meta.env.VITE_APPWRITE_COMMENTS_COLLECTION_ID,
 }
 
 export const client = new Client();
@@ -16,6 +17,7 @@ export const client = new Client();
 client
     .setEndpoint(appwriteConfig.url)
     .setProject(appwriteConfig.projectId)
+    .setEndpointRealtime('wss://cloud.appwrite.io/v1/realtime')
 
 export const account = new Account(client);
 export const database = new Databases(client);

@@ -1,4 +1,4 @@
-import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
+import { IComment, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 import { ID, ImageGravity, Query } from 'appwrite';
 import { account, appwriteConfig, avatars, database, storage } from "./config";
 
@@ -516,4 +516,23 @@ export async function updateProfile(user: IUpdateUser) {
         console.error(error);
     }
 
+}
+
+export async function createComment(comment: IComment) {
+    try {
+        const newComment = await database.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.commentsCollectionId,
+            ID.unique(),
+            {
+                post_id: comment.post_id,
+                user_id: [comment.user_id],
+                content: comment.content,
+            }
+        )
+
+        return newComment;
+    } catch (error) {
+        console.error(error);
+    }
 }

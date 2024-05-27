@@ -26,3 +26,9 @@ export const UpdateProfileValidation = z.object({
   bio: z.string().max(1000),
   file: z.custom<File[]>(),
 });
+
+export const CommentValidation = z.object({
+  post_id: z.string(),
+  user_id: z.string(),
+  content: z.string().min(1, { message: "Comment must be at least 1 character." }).max(2200),
+});
