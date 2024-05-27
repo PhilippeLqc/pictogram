@@ -1,5 +1,8 @@
 import UserCard from "@/components/shared/UserCard";
-import { useGetUsers } from "@/lib/react-query/queryAndMutations";
+import {
+  useGetCurrentUser,
+  useGetUsers,
+} from "@/lib/react-query/queryAndMutations";
 import { Models } from "appwrite";
 import Loader from "../shared/Loader";
 
@@ -9,6 +12,12 @@ const RightSideBar = () => {
     isLoading: isUserLoading,
     isError: isErrorCreators,
   } = useGetUsers(10);
+
+  const { data: currentUser } = useGetCurrentUser();
+
+  const topCreators = creator?.documents.filter(
+    (creator) => creator.$id !== currentUser?.$id
+  );
 
   return (
     <div className="rightsidebar">
@@ -26,7 +35,7 @@ const RightSideBar = () => {
           <Loader />
         ) : (
           <ul className="w-full grid grid-cols-2 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-7 max-w-5xl">
-            {creator?.documents.map((creator: Models.Document) => (
+            {topCreators?.map((creator: Models.Document) => (
               <UserCard creator={creator} key={creator.$id} />
             ))}
           </ul>

@@ -536,3 +536,19 @@ export async function createComment(comment: IComment) {
         console.error(error);
     }
 }
+
+export async function getUserPosts(userId: string) {
+try {
+    const posts = await database.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.postCollectionId,
+        [Query.equal('creator', userId)]
+    )
+
+    if (!posts) throw Error;
+
+    return posts;
+} catch (error) {
+    console.error(error);
+}
+}
