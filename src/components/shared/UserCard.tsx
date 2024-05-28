@@ -54,7 +54,7 @@ const UserCard = ({ creator }: userCardsProps) => {
           <p className="small-semibold">{creator.username}</p>
           <p className="small-regular text-light-3">
             Followed by {followers?.length}{" "}
-            {followers?.length > 1 ? "followers" : "follower"}
+            {followers?.length > 1 ? "abonnés" : "abonné"}
           </p>
         </div>
         <FollowButton creator={creator} />

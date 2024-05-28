@@ -596,7 +596,7 @@ export async function getComments(postId: string) {
     }
 }
 
-export async function deleteComments(commentId: string[]) {
+export async function deletemultipleComments(commentId: string[]) {
 try {
     commentId.forEach(async (id) => {
         await database.deleteDocument(
@@ -605,10 +605,27 @@ try {
             id,
         )
     })
+
     return { status: 'success'};
 } catch (error) {
     console.error(error);
 }
+}
+
+export async function deleteComment(commentId: string) {
+    try {
+        const statusCode = await database.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.commentsCollectionId,
+            commentId,
+        )
+
+        if (!statusCode) throw Error;
+
+        return { status: 'success'};
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 
