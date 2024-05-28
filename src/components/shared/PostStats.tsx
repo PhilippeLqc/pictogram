@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   useDeleteSavedPost,
+  useGetComments,
   useGetCurrentUser,
   useLikePost,
   useSavePost,
@@ -8,6 +9,7 @@ import {
 import { Models } from "appwrite";
 import { checkIsLiked } from "@/lib/utils";
 import Loader from "./Loader";
+import { Link } from "react-router-dom";
 
 type PostStatsProps = {
   post?: Models.Document;
@@ -25,6 +27,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const { mutate: deleteSavedPost, isPending: isDeletingSaved } =
     useDeleteSavedPost();
 
+  const { data: comments } = useGetComments(post?.$id || "");
   const { data: currentUser } = useGetCurrentUser();
 
   const savedPostRecord = currentUser?.save.find(
@@ -79,14 +82,18 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
           className="cursor-pointer"
         />
         <p className="small-medium lg:base-medium">{likes.length}</p>
-        <img
-          src="/assets/icons/comment.svg"
-          alt="comment"
-          width={20}
-          height={20}
-          className="cursor-pointer"
-        />
-        <p className="small-medium lg:base-medium">0</p>
+        <Link to={`/posts/${post?.$id}`}>
+          <img
+            src="/assets/icons/comment.svg"
+            alt="comment"
+            width={20}
+            height={20}
+            className="cursor-pointer"
+          />
+        </Link>
+        <p className="small-medium lg:base-medium">
+          {comments?.documents.length}
+        </p>
       </div>
       <div className="flex gap-2">
         {isSavingPost || isDeletingSaved ? (

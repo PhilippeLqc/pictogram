@@ -76,7 +76,11 @@ const UpdateProfile = () => {
       username: value.username,
       email: value.email,
       bio: value.bio,
+      imageUrl: updateUser?.imageUrl,
     });
+
+    console.log("user.imageUrl", user.imageUrl);
+    console.log("updateUser.imageUrl", updateUser?.imageUrl || "");
 
     return navigate(`/profile/${id}`);
   }

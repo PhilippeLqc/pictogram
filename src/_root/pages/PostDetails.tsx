@@ -1,4 +1,5 @@
 import CommentForm from "@/components/forms/CommentForm";
+import CommentContainer from "@/components/shared/CommentContainer";
 import GridPostList from "@/components/shared/GridPostList";
 import Loader from "@/components/shared/Loader";
 import PostStats from "@/components/shared/PostStats";
@@ -50,7 +51,7 @@ const PostDetails = () => {
             alt="creator"
             className="post_details-img"
           />
-          <div className="post_details-info h-[480px]">
+          <div className="post_details-info h-[600px]">
             <div className="flex-between w-full">
               <Link
                 to={`/profile/${post?.creator?.$id}`}
@@ -109,59 +110,31 @@ const PostDetails = () => {
                 </Button>
               </div>
             </div>
-            <div className="flex flex-1 w-full small-medium lg:base-regular">
-              <p>{post?.caption}</p>
-              <ul className="flex ml-2">
-                {post?.tags.map((tag: string) => (
-                  <li key={tag} className="text-light-3">
-                    #{tag}
-                  </li>
-                ))}
-              </ul>
+            <div className="flex flex-1 flex-col w-full small-medium lg:base-regular">
+              <div className="flex flex-col gap-2">
+                <p>{post?.caption}</p>
+                <ul className="flex">
+                  {post?.tags.map((tag: string) => (
+                    <li key={tag} className="text-light-3">
+                      #{tag}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <hr className="border w-full border-dark-4/80 mt-5" />
             </div>
-            <hr className="border w-full border-dark-4/80" />
-            <div className="comments-container">
-              {commentsPending ? (
-                <Loader />
-              ) : (
-                comments?.documents.map((comment) => (
-                  <div key={comment.$id} className="flex gap-2">
-                    <img
-                      src={comment.user_id.map(
-                        (url: { imageUrl: string }) => url.imageUrl
-                      )}
-                      alt="user"
-                      className="rounded-full w-8 h-8"
-                    />
-                    <div className="flex flex-col">
-                      <div className="flex flex-row gap-5">
-                        <p className="base-regular lg:base-semibold text-light-3 gap-10">
-                          {comment.user_id.map(
-                            (user: { name: string }) => user.name
-                          )}
-                        </p>
-                        <p className="base-regular lg:base-regular">
-                          {comment.content}
-                        </p>
-                      </div>
-                      <p className="subtle-semibold lg:small-regular text-light-3">
-                        {formatDate(comment.$createdAt ?? "")}
-                      </p>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+            <CommentContainer
+              comments={comments!}
+              commentsPending={commentsPending}
+            />
             <div className="w-full">
               <PostStats post={post} userId={user.id} />
-            </div>
-            <div className="w-full">
               <CommentForm post={post} />
             </div>
           </div>
         </div>
       )}
-      <div className="w-full max-w-5xl">
+      <div className="w-full max-w-7xl">
         <hr className="border w-full border-dark-4/80" />
         <h3 className="body-bold md:h3-bold w-full my-10">
           More related Posts

@@ -1,24 +1,14 @@
 import { Models } from "appwrite";
-import { Button } from "../ui/button";
-import {
-  useFollowUser,
-  useGetFollowers,
-  useUnfollowUser,
-} from "@/lib/react-query/queryAndMutations";
-import { useUserContext } from "@/context/AuthContext";
-import Loader from "@/components/shared/Loader";
+import { useGetFollowers } from "@/lib/react-query/queryAndMutations";
 import { useEffect, useState } from "react";
 import { client } from "@/lib/appwrite/config";
+import FollowButton from "./FollowButton";
 
 type userCardsProps = {
   creator: Models.Document;
 };
 const UserCard = ({ creator }: userCardsProps) => {
   const [followers, setFollowers] = useState<Models.Document[]>([]);
-  const { user } = useUserContext();
-  const { mutateAsync: followUser, isPending: isFollowing } = useFollowUser();
-  const { mutateAsync: unfollowUser, isPending: isUnfollowing } =
-    useUnfollowUser();
   const { data: dataFollowers } = useGetFollowers(creator.$id);
 
   useEffect(() => {
@@ -52,33 +42,6 @@ const UserCard = ({ creator }: userCardsProps) => {
     return () => unsubscribe();
   }, [creator.$id, dataFollowers]);
 
-  // Détermine si l'utilisateur actuel suit le créateur
-  const isUserFollowing = followers.find(
-    (follower) =>
-      follower.follower.$id === user?.id && creator.$id === follower.user.$id
-  );
-
-  const handleFollow = async () => {
-    if (!user) return;
-    try {
-      await followUser({ userId: creator.$id, followerId: user.id });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleUnfollow = async () => {
-    if (!user || !isUserFollowing) return;
-    const followId = followers.find(
-      (follower) => follower.follower.$id === user.id
-    );
-    try {
-      await unfollowUser(followId!.$id);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <div>
       <div className="user-card">
@@ -91,26 +54,10 @@ const UserCard = ({ creator }: userCardsProps) => {
           <p className="small-semibold">{creator.username}</p>
           <p className="small-regular text-light-3">
             Followed by {followers?.length}{" "}
-            {followers?.length > 1 ? "followers" : "follower"}
+            {followers?.length > 1 ? "abonnés" : "abonné"}
           </p>
         </div>
-        {!isUserFollowing ? (
-          <Button
-            className="shad-button_primary"
-            onClick={handleFollow}
-            disabled={isFollowing}
-          >
-            {isFollowing ? <Loader /> : "Follow"}
-          </Button>
-        ) : (
-          <Button
-            className="shad-button_primary"
-            onClick={handleUnfollow}
-            disabled={isUnfollowing}
-          >
-            {isUnfollowing ? <Loader /> : "Unfollow"}
-          </Button>
-        )}
+        <FollowButton creator={creator} />
       </div>
     </div>
   );
