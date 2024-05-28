@@ -16,7 +16,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import Loader from "../shared/Loader";
 
 type PostCommentProps = {
@@ -80,9 +80,9 @@ const CommentForm = ({ post }: PostCommentProps) => {
                       <Loader />
                     ) : (
                       <img
-                        src="assets/icons/add-comment.svg"
-                        alt="send"
-                        className="w-6 h-6 cursor-pointer "
+                        src="/assets/icons/add-comment.svg"
+                        alt="add-comment"
+                        className="w-6 h-6 cursor-pointer"
                       />
                     )}
                   </Button>
