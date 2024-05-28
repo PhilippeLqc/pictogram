@@ -261,6 +261,21 @@ export async function deleteSavePost(savedRecordId: string) {
     }
 }
 
+export async function deleteMultipleSavePost(savedRecordId: string[]) {
+    try {
+        savedRecordId.forEach(async (id) => {
+            await database.deleteDocument(
+                appwriteConfig.databaseId,
+                appwriteConfig.savesCollectionId,
+                id,
+            )
+        })
+        return { status: 'success'};
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export async function getPostsById(postId: string) {
     try {
         const post = await database.getDocument(
@@ -447,7 +462,7 @@ export async function getFollowers(userId: string) {
 
         if (!followers || followers.documents.length === 0) return [];
 
-        return followers.documents.map(doc => doc.followerId);
+        return followers.documents;
     } catch (error) {
         console.error("Error fetching followers:", error);
         return [];
@@ -537,6 +552,22 @@ export async function createComment(comment: IComment) {
     }
 }
 
+export async function getComments(postId: string) {
+    try {
+        const comments = await database.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.commentsCollectionId,
+            [Query.equal('post_id', postId)]
+        )
+
+        if (!comments) throw Error;
+
+        return comments;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export async function getUserPosts(userId: string) {
 try {
     const posts = await database.listDocuments(
@@ -548,6 +579,21 @@ try {
     if (!posts) throw Error;
 
     return posts;
+} catch (error) {
+    console.error(error);
+}
+}
+
+export async function deleteComments(commentId: string[]) {
+try {
+    commentId.forEach(async (id) => {
+        await database.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.commentsCollectionId,
+            id,
+        )
+    })
+    return { status: 'success'};
 } catch (error) {
     console.error(error);
 }

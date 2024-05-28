@@ -17,7 +17,10 @@ export const client = new Client();
 client
     .setEndpoint(appwriteConfig.url)
     .setProject(appwriteConfig.projectId)
-    .setEndpointRealtime('wss://cloud.appwrite.io/v1/realtime')
+
+client.subscribe('databases.*', response => {
+    console.log(response);
+})
 
 export const account = new Account(client);
 export const database = new Databases(client);

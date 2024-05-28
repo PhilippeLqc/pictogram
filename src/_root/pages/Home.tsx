@@ -1,8 +1,10 @@
 import Loader from "@/components/shared/Loader";
 import PostCard from "@/components/shared/PostCard";
 import RightSideBar from "@/components/shared/RightSideBar";
+import { client } from "@/lib/appwrite/config";
 import { useGetRecentPosts } from "@/lib/react-query/queryAndMutations";
 import { Models } from "appwrite";
+import { useEffect } from "react";
 
 const Home = () => {
   const {
@@ -11,6 +13,12 @@ const Home = () => {
     isError: isErrorPosts,
   } = useGetRecentPosts();
 
+  useEffect(() => {
+    const unsubscribe = client.subscribe("collection.*", (response) => {
+      console.log(response);
+    });
+    return unsubscribe();
+  }, []);
   return (
     <div className="flex flex-1">
       <div className="home-container">
