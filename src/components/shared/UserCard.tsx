@@ -90,7 +90,8 @@ const UserCard = ({ creator }: userCardsProps) => {
         <div className="flex flex-col text-center">
           <p className="small-semibold">{creator.username}</p>
           <p className="small-regular text-light-3">
-            Followed by {followers?.length} followers
+            Followed by {followers?.length}{" "}
+            {followers?.length > 1 ? "followers" : "follower"}
           </p>
         </div>
         {!isUserFollowing ? (
