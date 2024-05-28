@@ -1,5 +1,4 @@
 import Loader from "@/components/shared/Loader";
-import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/AuthContext";
 import {
   useGetFollowers,
@@ -10,6 +9,7 @@ import { Link, useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import GridPostList from "@/components/shared/GridPostList";
 import LikedPosts from "./LikedPosts";
+import FollowButton from "@/components/shared/FollowButton";
 import { useState } from "react";
 
 interface StabBlockProps {
@@ -44,9 +44,7 @@ const Profile = () => {
       <div className="profile-inner_container">
         <div className="flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7">
           <img
-            src={
-              currentUser?.imageUrl || "/assets/icons/profile-placeholder.svg"
-            }
+            src={user?.imageUrl || "/assets/icons/profile-placeholder.svg"}
             alt="user profile"
             className="w-28 h-28 lg:h-36 lg:w-36 rounded-full"
           />
@@ -100,9 +98,7 @@ const Profile = () => {
               </Link>
             </div>
             <div className={`${user.id === id && "hidden"}`}>
-              <Button type="button" className="shad-button_primary px-8">
-                Follow
-              </Button>
+              <FollowButton creator={currentUser} />
             </div>
           </div>
         </div>
@@ -144,7 +140,13 @@ const Profile = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="posts" className="pt-10">
-            <GridPostList posts={currentUser.posts} showUser={false} />
+            {currentUser?.posts.length === 0 ? (
+              <div className="flex-center">
+                <p className="h2-bold text-center">No posts yet</p>
+              </div>
+            ) : (
+              <GridPostList posts={currentUser.posts} showUser={false} />
+            )}
           </TabsContent>
           <TabsContent value="liked-posts" className="pt-10">
             <LikedPosts />
@@ -161,7 +163,13 @@ const Profile = () => {
             />
             Posts
           </div>
-          <GridPostList posts={currentUser.posts} showUser={false} />
+          {currentUser?.posts.length === 0 ? (
+            <div className="flex-center">
+              <p className="h2-bold text-center">No posts yet</p>
+            </div>
+          ) : (
+            <GridPostList posts={currentUser.posts} showUser={false} />
+          )}
         </div>
       )}
     </div>

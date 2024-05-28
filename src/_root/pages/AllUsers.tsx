@@ -1,5 +1,6 @@
 import Loader from "@/components/shared/Loader";
 import UserCard from "@/components/shared/UserCard";
+import { useUserContext } from "@/context/AuthContext";
 import { useGetUsers } from "@/lib/react-query/queryAndMutations";
 import { Models } from "appwrite";
 
@@ -9,6 +10,12 @@ const AllUsers = () => {
     isLoading: isUserLoading,
     isError: isErrorCreators,
   } = useGetUsers();
+
+  const { user } = useUserContext();
+
+  const creators = allUsers?.documents.filter(
+    (creator) => creator.$id !== user?.id
+  );
 
   return (
     <div className="common-container ">
@@ -33,7 +40,7 @@ const AllUsers = () => {
           <Loader />
         ) : (
           <ul className="user-grid">
-            {allUsers?.documents.map((creator: Models.Document) => (
+            {creators?.map((creator: Models.Document) => (
               <UserCard creator={creator} key={creator.$id} />
             ))}
           </ul>

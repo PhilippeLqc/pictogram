@@ -255,6 +255,14 @@ export const useGetPostsById = (postId: string) => {
     })
 };
 
+export const useGetUserPosts = (userId: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
+        queryFn: () => getUserPosts(userId),
+        enabled: !!userId
+    })
+}
+
 // COMMENT QUERY ----------------------------
 export const useCreateComment = () => {
     const QueryClient = useQueryClient();
@@ -276,13 +284,7 @@ export const useGetComments = (postId: string) => {
     })
 }
 
-export const useGetUserPosts = (userId: string) => {
-    return useQuery({
-        queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
-        queryFn: () => getUserPosts(userId),
-        enabled: !!userId
-    })
-}
+
 
 
 

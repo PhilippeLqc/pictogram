@@ -133,8 +133,8 @@ const PostDetails = () => {
                       alt="user"
                       className="rounded-full w-8 h-8"
                     />
-                    <div className="flex flex-col">
-                      <div className="flex flex-row gap-5">
+                    <div className="flex flex-col mb-5">
+                      <div className="flex flex-row gap-4">
                         <p className="base-regular lg:base-semibold text-light-3 gap-10">
                           {comment.user_id.map(
                             (user: { name: string }) => user.name
@@ -144,7 +144,7 @@ const PostDetails = () => {
                           {comment.content}
                         </p>
                       </div>
-                      <p className="subtle-semibold lg:small-regular text-light-3">
+                      <p className="subtle-semibold lg:subtle-semibold text-light-3">
                         {formatDate(comment.$createdAt ?? "")}
                       </p>
                     </div>
