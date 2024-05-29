@@ -4,10 +4,10 @@ import { useGetPostsById } from "@/lib/react-query/queryAndMutations";
 import { useParams } from "react-router-dom";
 
 const EditPost = () => {
-  const { id } = useParams();
-  const { data: post, isPending } = useGetPostsById(id || "");
+  const { id } = useParams<{ id: string }>();
+  const { data: post, isPending: isLoading } = useGetPostsById(id || "");
 
-  if (isPending) {
+  if (isLoading) {
     return <Loader />;
   }
 

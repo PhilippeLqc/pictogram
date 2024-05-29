@@ -25,8 +25,8 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 );
 
 const Profile = () => {
-  const [activeTab, setActiveTab] = useState("posts");
-  const { id } = useParams();
+  const [activeTab, setActiveTab] = useState<"posts" | "liked-posts">("posts");
+  const { id } = useParams<{ id: string }>();
   const { data: currentUser } = useGetUserById(id || "");
   const { data: currentUserFollowers } = useGetFollowers(id || "");
   const { data: currentUserFollowing } = useGetFollowing(id || "");
@@ -106,7 +106,9 @@ const Profile = () => {
       {user.id === currentUser.$id ? (
         <Tabs
           defaultValue={activeTab}
-          onValueChange={setActiveTab}
+          onValueChange={(value) =>
+            setActiveTab(value as "posts" | "liked-posts")
+          }
           className=" max-w-5xl w-full"
         >
           <TabsList className="flex max-w-5xl w-full justify-start">

@@ -23,8 +23,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 const PostDetails = () => {
   const navigate = useNavigate();
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const { id } = useParams();
+  const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
+  const { id } = useParams<{ id: string }>();
   const { user } = useUserContext();
   const { data: post, isPending } = useGetPostsById(id || "");
   const { data: userPosts, isPending: userPostsPending } = useGetUserPosts(
@@ -35,7 +35,8 @@ const PostDetails = () => {
   );
   const { mutateAsync: deletePost } = useDeletePost();
 
-  const relatedPosts = userPosts?.documents.filter((post) => post.$id !== id);
+  const relatedPosts: Models.Document[] | undefined =
+    userPosts?.documents.filter((post) => post.$id !== id);
 
   const handleCancel = () => {
     setIsPopoverOpen(false);
