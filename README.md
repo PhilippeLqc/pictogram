@@ -1,6 +1,6 @@
-# Instalike
+# Pictogram
 
-Instalike est une application inspirée d'Instagram développée en utilisant React, TypeScript et Vite.
+Pictogram est une application inspirée d'Instagram développée en utilisant React, TypeScript et Vite.
 
 ## Table des matières
 
@@ -13,15 +13,15 @@ Instalike est une application inspirée d'Instagram développée en utilisant Re
 
 ## Aperçu
 
-Instalike est une application web permettant aux utilisateurs de partager des photos et de suivre les activités de leurs amis, similaire à Instagram. Cette application est construite avec React pour l'interface utilisateur, TypeScript pour une meilleure gestion des types, et Vite pour un développement rapide et optimisé.
+Pictogram est une application web permettant aux utilisateurs de partager des photos et de suivre les activités de leurs amis, similaire à Instagram. Cette application est construite avec React pour l'interface utilisateur, TypeScript pour une meilleure gestion des types, et Vite pour un développement rapide et optimisé.
 
 ## Installation
 
 1. Clonez le dépôt :
 
     ```bash
-    git clone https://github.com/PhilippeLqc/instalike.git
-    cd instalike
+    git clone https://github.com/PhilippeLqc/pictogram.git
+    cd pictogram
     ```
 
 2. Installez les dépendances :
