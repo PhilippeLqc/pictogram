@@ -19,17 +19,22 @@ import {
 import { Button } from "@/components/ui/button";
 import Loader from "../shared/Loader";
 
-type PostCommentProps = {
+interface PostCommentProps {
   post?: Models.Document;
-};
+}
 
 const CommentForm = ({ post }: PostCommentProps) => {
+  const { user } = useUserContext();
+
+  // QUERIES
+
   const { mutateAsync: createComment, isPending: isCreatingComment } =
     useCreateComment();
-  const { user } = useUserContext();
   const { data: currentUser } = useGetCurrentUser();
 
-  // 1. Define your form
+  // -------------------------------------------------------------------
+
+  // 1. Define your form using zodResolver and zod. Shadcn doc https://shadcn.com/docs/forms/react-hook-form
   const form = useForm<z.infer<typeof CommentValidation>>({
     resolver: zodResolver(CommentValidation),
     defaultValues: {
@@ -39,15 +44,18 @@ const CommentForm = ({ post }: PostCommentProps) => {
     },
   });
 
-  // 2. Define a submit handler
+  // 2. Define a submit handler. Shadcn doc https://shadcn.com/docs/forms/react-hook-form
   async function onSubmit(values: z.infer<typeof CommentValidation>) {
     const newComment = await createComment(values);
 
+    // check if newComment is undefined. If it is, show toast.
     if (!newComment) {
       toast({
         title: "Something went wrong. Please try again later",
       });
     }
+
+    // reset the form after sending comments
     form.reset();
   }
 

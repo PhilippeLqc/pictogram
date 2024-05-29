@@ -26,6 +26,8 @@ const PostDetails = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
   const { id } = useParams<{ id: string }>();
   const { user } = useUserContext();
+
+  // QUERIES
   const { data: post, isPending } = useGetPostsById(id || "");
   const { data: userPosts, isPending: userPostsPending } = useGetUserPosts(
     post?.creator.$id || ""
@@ -34,10 +36,12 @@ const PostDetails = () => {
     id || ""
   );
   const { mutateAsync: deletePost } = useDeletePost();
+  // ----------------------------------------------------------------------
 
   const relatedPosts: Models.Document[] | undefined =
     userPosts?.documents.filter((post) => post.$id !== id);
 
+  // HANDLERS to handle the popover and delete post
   const handleCancel = () => {
     setIsPopoverOpen(false);
   };
@@ -52,6 +56,8 @@ const PostDetails = () => {
     setIsPopoverOpen(false);
     navigate(-1);
   };
+
+  // ----------------------------------------------------------------------
 
   return (
     <div className="post_details-container">

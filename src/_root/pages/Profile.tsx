@@ -27,11 +27,17 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 const Profile = () => {
   const [activeTab, setActiveTab] = useState<"posts" | "liked-posts">("posts");
   const { id } = useParams<{ id: string }>();
+
+  // QUERIES
+
   const { data: currentUser } = useGetUserById(id || "");
   const { data: currentUserFollowers } = useGetFollowers(id || "");
   const { data: currentUserFollowing } = useGetFollowing(id || "");
   const { user } = useUserContext();
 
+  // -------------------------------------------------------------
+
+  // check if currentUser is undefined. If it is, show Loader. Allows to take some patience from user while fetching the currentUser data.
   if (!currentUser)
     return (
       <div className="flex-center w-full h-full">

@@ -24,15 +24,20 @@ import { Input } from "@/components/ui/input";
 import ProfileUploader from "@/components/shared/ProfileUploader";
 
 const UpdateProfile = () => {
+  const navigate = useNavigate();
   const { user, setUser } = useUserContext();
   const { toast } = useToast();
-  const navigate = useNavigate();
   const { id } = useParams();
+
+  // QUERIES
+
   const { mutateAsync: updateProfile, isPending: isLoadingUpdate } =
     useUpdateProfile();
   const { data: currentUser } = useGetUserById(id || "");
 
-  // 1. Define your form.
+  // ----------------------------------------------------------------
+
+  // 1. Define your form using zodResolver and zod. Shadcn doc https://shadcn.com/docs/forms/react-hook-form
   const form = useForm<z.infer<typeof UpdateProfileValidation>>({
     resolver: zodResolver(UpdateProfileValidation),
     defaultValues: {
@@ -44,6 +49,7 @@ const UpdateProfile = () => {
     },
   });
 
+  // check if currentUser is undefined. If it is, show Loader. Allows to take some patience from user while fetching the currentUser data.
   if (!currentUser)
     return (
       <div className="flex-center w-full h-full">
@@ -51,7 +57,7 @@ const UpdateProfile = () => {
       </div>
     );
 
-  // 2. Define a submit handler.
+  // 2. Define a submit handler. Shadcn doc https://shadcn.com/docs/forms/react-hook-form
   async function onSubmit(value: z.infer<typeof UpdateProfileValidation>) {
     const updateUser = await updateProfile({
       userId: currentUser?.$id || "",
@@ -64,6 +70,7 @@ const UpdateProfile = () => {
       imageId: currentUser?.imageId || "",
     });
 
+    // check if updateUser is undefined. If it is, show toast.
     if (!updateUser) {
       toast({
         title: "Something went wrong, please try again later",
@@ -79,9 +86,7 @@ const UpdateProfile = () => {
       imageUrl: updateUser?.imageUrl,
     });
 
-    console.log("user.imageUrl", user.imageUrl);
-    console.log("updateUser.imageUrl", updateUser?.imageUrl || "");
-
+    // redirect to profile page after updating the profile
     return navigate(`/profile/${id}`);
   }
 

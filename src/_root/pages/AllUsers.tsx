@@ -13,6 +13,7 @@ const AllUsers = () => {
 
   const { user } = useUserContext();
 
+  // filter out the current user from the allUsers list
   const creators: Models.Document[] = allUsers!.documents.filter(
     (creator) => creator.$id !== user?.id
   );

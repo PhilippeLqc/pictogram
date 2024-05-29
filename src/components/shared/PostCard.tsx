@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 import PostStats from "./PostStats";
 import CommentForm from "../forms/CommentForm";
 
-type PostCardProps = {
+interface PostCardProps {
   post: Models.Document;
-};
+}
 
 const PostCard = ({ post }: PostCardProps) => {
   const { user } = useUserContext();

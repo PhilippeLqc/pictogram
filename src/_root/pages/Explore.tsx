@@ -20,12 +20,14 @@ const Explore = () => {
   const { data: searchedPosts, isFetching: isSearchFetching } =
     useSearchPosts(debouncedValue);
 
+  // trigger fetchNextPage if inView is true and searchValue is empty
   useEffect(() => {
     if (inView && !searchValue) {
       fetchNextPage();
     }
   }, [inView, searchValue, fetchNextPage]);
 
+  // trigger Loader if posts is undefined. Allows to take some patience from user while fetching the post data.
   if (!posts) {
     return (
       <div className="flex-center w-full h-full">
@@ -34,6 +36,7 @@ const Explore = () => {
     );
   }
 
+  // check if searchValue is not empty. If it is, show search results. Else, show posts.
   const shouldShowSearchResults: boolean = searchValue !== "";
   const shouldShowPosts: boolean =
     !shouldShowSearchResults &&

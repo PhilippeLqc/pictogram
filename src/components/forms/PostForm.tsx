@@ -23,22 +23,26 @@ import {
 import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
 
-type PostFormProps = {
+interface PostFormProps {
   post?: Models.Document;
   action?: "create" | "update";
-};
+}
 
 const PostForm = ({ post, action }: PostFormProps) => {
+  const { user } = useUserContext();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  // QUERIES
+
   const { mutateAsync: createPost, isPending: isLoadingCreate } =
     useCreatePost();
   const { mutateAsync: updatePost, isPending: isLoadingUpdate } =
     useUpdatePost();
 
-  const { user } = useUserContext();
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  // --------------------------------------------------------------
 
-  // 1. Define your form.
+  // 1. Define your form using zodResolver and zod. Shadcn doc https://shadcn.com/docs/forms/react-hook-form
   const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
     defaultValues: {
@@ -49,7 +53,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
     },
   });
 
-  // 2. Define a submit handler.
+  // 2. Define a submit handler. Shadcn doc https://shadcn.com/docs/forms/react-hook-form
   async function onSubmit(values: z.infer<typeof PostValidation>) {
     if (post && action === "update") {
       const updatedPost = await updatePost({
@@ -59,6 +63,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
         imageUrl: post?.imageUrl,
       });
 
+      // check if updatedPost is undefined. If it is, show toast.
       if (!updatedPost) {
         toast({
           title: "please try again later",
@@ -73,12 +78,14 @@ const PostForm = ({ post, action }: PostFormProps) => {
       userId: user.id,
     });
 
+    // check if newPost is undefined. If it is, show toast.
     if (!newPost) {
       toast({
         title: "please try again later",
       });
     }
 
+    // redirect to home page after creating a post
     navigate("/");
   }
 

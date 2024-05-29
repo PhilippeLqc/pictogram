@@ -25,7 +25,7 @@ const SigninForm = () => {
 
   const { mutateAsync: signinAccount } = useSigninAccount();
 
-  // 1. Define your form.
+  // 1. Define your form using zodResolver and zod. Shadcn doc https://shadcn.com/docs/forms/react-hook-form
   const form = useForm<z.infer<typeof SigninValidation>>({
     resolver: zodResolver(SigninValidation),
     defaultValues: {
@@ -34,7 +34,7 @@ const SigninForm = () => {
     },
   });
 
-  // 2. Define a submit handler.
+  // 2. Define a submit handler. Shadcn doc https://shadcn.com/docs/forms/react-hook-form
   async function onSubmit(values: z.infer<typeof SigninValidation>) {
     const session = await signinAccount({
       email: values.email,
@@ -49,6 +49,7 @@ const SigninForm = () => {
 
     const isLoggedIn = await checkAuthUser();
 
+    // check if user is logged in. If user is logged in, redirect to home page. Else, toast error message.
     if (isLoggedIn) {
       form.reset();
       navigate("/");
