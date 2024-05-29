@@ -4,6 +4,11 @@ import GridPostList from "@/components/shared/GridPostList";
 import Loader from "@/components/shared/Loader";
 import PostStats from "@/components/shared/PostStats";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useUserContext } from "@/context/AuthContext";
 import {
   useDeletePost,
@@ -13,10 +18,12 @@ import {
 } from "@/lib/react-query/queryAndMutations";
 import { formatDate } from "@/lib/utils";
 import { Models } from "appwrite";
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const PostDetails = () => {
   const navigate = useNavigate();
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const { id } = useParams();
   const { user } = useUserContext();
   const { data: post, isPending } = useGetPostsById(id || "");
@@ -30,6 +37,10 @@ const PostDetails = () => {
 
   const relatedPosts = userPosts?.documents.filter((post) => post.$id !== id);
 
+  const handleCancel = () => {
+    setIsPopoverOpen(false);
+  };
+
   const handleDelete = () => {
     deletePost({
       postId: id || "",
@@ -37,6 +48,7 @@ const PostDetails = () => {
       savedRecordId: post?.save.map((save: Models.Document) => save.$id) || [],
       commentId: comments?.documents.map((comment) => comment.$id) || [],
     });
+    setIsPopoverOpen(false);
     navigate(-1);
   };
 
@@ -93,21 +105,39 @@ const PostDetails = () => {
                     height={24}
                   />
                 </Link>
-
-                <Button
-                  variant="ghost"
-                  className={`"ghost_details-delete" ${
-                    user.id !== post?.creator.$id && "hidden"
-                  }`}
-                  onClick={handleDelete}
-                >
-                  <img
-                    src="/assets/icons/delete.svg"
-                    alt="delete"
-                    width={24}
-                    height={24}
-                  />
-                </Button>
+                <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      className={`ghost_details-delete ${
+                        user.id !== post?.creator.$id && "hidden"
+                      }`}
+                      onClick={() => setIsPopoverOpen(true)}
+                    >
+                      <img
+                        src="/assets/icons/delete.svg"
+                        alt="delete"
+                        width={24}
+                        height={24}
+                      />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="flex flex-col gap-3">
+                      <p>Are you sure you want to delete this post?</p>
+                      <div className="flex-center gap-3">
+                        <Button variant="outline" onClick={handleCancel}>
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={handleDelete}
+                          className="ghost_details-delete bg-red "
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
             <div className="flex flex-1 flex-col w-full small-medium lg:base-regular">
