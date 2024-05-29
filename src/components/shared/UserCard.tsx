@@ -3,6 +3,7 @@ import { useGetFollowers } from "@/lib/react-query/queryAndMutations";
 import { useEffect, useState } from "react";
 import { client } from "@/lib/appwrite/config";
 import FollowButton from "./FollowButton";
+import { Link } from "react-router-dom";
 
 interface userCardsProps {
   creator: Models.Document;
@@ -50,11 +51,13 @@ const UserCard = ({ creator }: userCardsProps) => {
   return (
     <div>
       <div className="user-card">
-        <img
-          src={creator?.imageUrl || "assets/icons/default-avatar.svg"}
-          alt="creator"
-          className="rounded-full w-12 h-12 md:w-16 md:h-16"
-        />
+        <Link to={`/profile/${creator.$id}`}>
+          <img
+            src={creator?.imageUrl || "assets/icons/default-avatar.svg"}
+            alt="creator"
+            className="rounded-full w-12 h-12 md:w-16 md:h-16"
+          />
+        </Link>
         <div className="flex flex-col text-center">
           <p className="small-semibold">{creator.username}</p>
           <p className="small-regular text-light-3">
