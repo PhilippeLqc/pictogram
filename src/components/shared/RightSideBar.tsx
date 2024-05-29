@@ -15,6 +15,7 @@ const RightSideBar = () => {
 
   const { data: currentUser } = useGetCurrentUser();
 
+  // filter the current user from the creators list
   const topCreators: Models.Document[] | undefined = creator?.documents.filter(
     (creator) => creator.$id !== currentUser?.$id
   );
@@ -22,8 +23,8 @@ const RightSideBar = () => {
   return (
     <div className="rightsidebar">
       <div className="flex flex-col py-5">
-        <h2 className="h2-bold md:h3-bold text-left w-full mb-5">
-          Top Creators
+        <h2 className="h3-bold md:h2-bold text-left w-full mb-7">
+          You might want to follow
         </h2>
         {isErrorCreators ? (
           <div className="flex flex-col items-center justify-center h-96">

@@ -11,42 +11,57 @@ import { checkIsLiked } from "@/lib/utils";
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
 
-type PostStatsProps = {
+interface PostStatsProps {
   post?: Models.Document;
   userId: string;
-};
+}
 
 const PostStats = ({ post, userId }: PostStatsProps) => {
+  // Store the likes of the post
   const LikeList = post?.likes.map((user: Models.Document) => user.$id);
+
+  // USESTATE
 
   const [likes, setlikes] = useState<string[]>(LikeList);
   const [isSaved, setIsSaved] = useState(false);
+
+  // ------------------------------------------------------------------------
+
+  // QUERIES
 
   const { mutate: likePost } = useLikePost();
   const { mutate: savePost, isPending: isSavingPost } = useSavePost();
   const { mutate: deleteSavedPost, isPending: isDeletingSaved } =
     useDeleteSavedPost();
-
   const { data: comments } = useGetComments(post?.$id || "");
   const { data: currentUser } = useGetCurrentUser();
 
+  // ------------------------------------------------------------------------
+
+  // Check if the post is saved by the current user
   const savedPostRecord = currentUser?.save.find(
     (record: Models.Document) => record.post.$id === post?.$id
   );
 
   useEffect(() => {
+    // Update the isSaved state when the savedPostRecord changes
     setIsSaved(!!savedPostRecord);
   }, [currentUser, savedPostRecord]);
 
+  // HANDLERS
+
   const handleLikePost = (e: React.MouseEvent) => {
+    // Stop the propagation of the event
     e.stopPropagation();
 
     let NewLikes = [...likes];
     const hasLiked = NewLikes.includes(userId);
 
+    // If the user has liked the post, remove their id from the likes list
     if (hasLiked) {
       NewLikes = NewLikes.filter((id) => id !== userId);
     } else {
+      // If the user has not liked the post, add their id to the likes list
       NewLikes.push(userId);
     }
 
@@ -55,16 +70,21 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   };
 
   const handleSavePost = (e: React.MouseEvent) => {
+    // Stop the propagation of the event
     e.stopPropagation();
 
+    // If the post is already saved, delete the saved post
     if (savedPostRecord) {
       deleteSavedPost(savedPostRecord.$id);
       setIsSaved(false);
     } else {
+      // If the post is not saved, save the post
       savePost({ post: post?.$id || "", user: userId });
       setIsSaved(true);
     }
   };
+
+  // ------------------------------------------------------------------------
 
   return (
     <div className="flex justify-between items-center z-20">

@@ -23,15 +23,14 @@ import { useUserContext } from "@/context/AuthContext";
 
 const SignupForm = () => {
   const { toast } = useToast();
-  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const { checkAuthUser } = useUserContext();
   const navigate = useNavigate();
 
   const { mutateAsync: createUserAccount, isPending: isCreatingAccount } =
     useCreateUserAccount();
-  const { mutateAsync: signinAccount, isPending: isSigninIn } =
-    useSigninAccount();
+  const { mutateAsync: signinAccount } = useSigninAccount();
 
-  // 1. Define your form.
+  // 1. Define your form using zodResolver and zod. Shadcn doc https://shadcn.com/docs/forms/react-hook-form
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
     defaultValues: {
@@ -42,7 +41,7 @@ const SignupForm = () => {
     },
   });
 
-  // 2. Define a submit handler.
+  // 2. Define a submit handler. Shadcn doc https://shadcn.com/docs/forms/react-hook-form
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
     // create the user
     const newUser = await createUserAccount(values);
@@ -57,20 +56,22 @@ const SignupForm = () => {
       password: values.password,
     });
 
+    //check if session is created after signup. If not, toast error message.
     if (!session) {
       return toast({
-        title: "Signin failed. Please try again.",
+        title: "Something went wrong. Please login your new account",
       });
     }
 
     const isLoggedIn = await checkAuthUser();
 
+    // check if user is logged in. If user is logged in, redirect to home page. Else, toast error message.
     if (isLoggedIn) {
       form.reset();
       navigate("/");
     } else {
       return toast({
-        title: "Signin failed. Please try again.",
+        title: "Login failed. Please try again.",
       });
     }
   }

@@ -7,6 +7,7 @@ const EditPost = () => {
   const { id } = useParams<{ id: string }>();
   const { data: post, isPending: isLoading } = useGetPostsById(id || "");
 
+  // trigger Loader if isLoading is true. Allows to take some patience from user while fetching the post data.
   if (isLoading) {
     return <Loader />;
   }

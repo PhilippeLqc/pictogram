@@ -2,10 +2,10 @@ import { formatDate } from "@/lib/utils";
 import Loader from "./Loader";
 import { Models } from "appwrite";
 
-type commentContainerProps = {
+interface commentContainerProps {
   comments: Models.DocumentList<Models.Document>;
   commentsPending: boolean;
-};
+}
 
 const CommentContainer = ({
   comments,

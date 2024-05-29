@@ -8,11 +8,17 @@ import { INavLink } from "@/types";
 
 const Leftsidebar = () => {
   const { pathname } = useLocation();
-  const { mutate: signOut, isSuccess } = useSignOutAccount();
   const navigate = useNavigate();
   const user = useUserContext();
 
+  // QUERIES
+
+  const { mutate: signOut, isSuccess } = useSignOutAccount();
+
+  // ------------------------------------------------------------------------
+
   useEffect(() => {
+    // redirect to home page after logging out
     if (isSuccess) navigate(0);
   }, [isSuccess, navigate]);
 

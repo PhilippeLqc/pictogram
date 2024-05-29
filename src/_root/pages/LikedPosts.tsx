@@ -5,6 +5,7 @@ import { useGetCurrentUser } from "@/lib/react-query/queryAndMutations";
 const LikedPosts = () => {
   const { data: currentUser } = useGetCurrentUser();
 
+  // trigger Loader if currentUser is undefined. Allows to take some patience from user while fetching the currentUser data.
   if (!currentUser)
     return (
       <div className="flex-center w-full h-full">

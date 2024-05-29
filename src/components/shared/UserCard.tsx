@@ -4,24 +4,27 @@ import { useEffect, useState } from "react";
 import { client } from "@/lib/appwrite/config";
 import FollowButton from "./FollowButton";
 
-type userCardsProps = {
+interface userCardsProps {
   creator: Models.Document;
-};
+}
 const UserCard = ({ creator }: userCardsProps) => {
   const [followers, setFollowers] = useState<Models.Document[]>([]);
   const { data: dataFollowers } = useGetFollowers(creator.$id);
 
   useEffect(() => {
+    // variable to store the event name
     const event = `databases.${
       import.meta.env.VITE_APPWRITE_DATABASE_ID
     }.collections.${
       import.meta.env.VITE_APPWRITE_FOLLOWS_COLLECTION_ID
     }.documents`;
 
+    // If the dataFollowers is not empty, set the followers to the dataFollowers
     if (dataFollowers) {
       setFollowers(dataFollowers);
     }
 
+    // function to handle the subscription to the follow collection in realtime (websocket connection). doc : https://appwrite.io/docs/apis/realtime
     const unsubscribe = client.subscribe(event, (response) => {
       if (
         response.events.includes(
@@ -39,6 +42,8 @@ const UserCard = ({ creator }: userCardsProps) => {
         );
       }
     });
+
+    // unsubscribe from the follow collection when the component is unmounted
     return () => unsubscribe();
   }, [creator.$id, dataFollowers]);
 
