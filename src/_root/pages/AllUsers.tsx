@@ -13,7 +13,7 @@ const AllUsers = () => {
 
   const { user } = useUserContext();
 
-  const creators = allUsers?.documents.filter(
+  const creators: Models.Document[] = allUsers!.documents.filter(
     (creator) => creator.$id !== user?.id
   );
 

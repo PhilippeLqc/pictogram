@@ -15,7 +15,7 @@ const RightSideBar = () => {
 
   const { data: currentUser } = useGetCurrentUser();
 
-  const topCreators = creator?.documents.filter(
+  const topCreators: Models.Document[] | undefined = creator?.documents.filter(
     (creator) => creator.$id !== currentUser?.$id
   );
 
