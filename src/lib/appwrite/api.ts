@@ -48,7 +48,6 @@ export async function signinAccount(user: {
 }) {
     try {
         const session = await account.createEmailPasswordSession(user.email, user.password);
-        console.log({session});
         return session;
     } catch (error) {
         console.error(error);
