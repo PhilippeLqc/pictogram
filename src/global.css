@@ -232,7 +232,7 @@
 
   /* Right sidebar */
   .rightsidebar {
-    @apply hidden xl:flex px-6 py-10 flex-col justify-between min-w-[500px] bg-dark-2;
+    @apply hidden xl:flex px-6 py-10 flex-col justify-between min-w-[500px] bg-dark-2 overflow-scroll custom-scrollbar;
   }
 
   /* Post Card */

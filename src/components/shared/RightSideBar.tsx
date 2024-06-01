@@ -21,7 +21,7 @@ const RightSideBar = () => {
   );
 
   return (
-    <div className="rightsidebar">
+    <div className="rightsidebar overflow-scroll">
       <div className="flex flex-col py-5">
         <h2 className="h3-bold md:h2-bold text-left w-full mb-7">
           You might want to follow
